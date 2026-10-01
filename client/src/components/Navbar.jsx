@@ -1,10 +1,12 @@
+import { NavLink } from "react-router-dom";
+
 function Navbar({ cantidadCarrito = 0 }) {
   return (
     <header className="site-header">
       <div className="container header__inner">
         <div className="logo">
           <img
-            src="./images/logo-HJ.png"
+            src="/images/logo-HJ.png"
             alt="imagen logo"
             className="logo__img"
             width="40"
@@ -16,9 +18,15 @@ function Navbar({ cantidadCarrito = 0 }) {
         <div className="header__right">
           <nav className="main-nav" aria-label="Navegación principal">
             <ul className="main-nav__list">
-              <li><a href="#">Inicio</a></li>
-              <li><a href="#">Productos</a></li>
-              <li><a href="#">Contacto</a></li>
+              <li>
+                <NavLink to="/" end>Inicio</NavLink>
+              </li>
+              <li>
+                <NavLink to="/productos">Productos</NavLink>
+              </li>
+              <li>
+                <NavLink to="/contacto">Contacto</NavLink>
+              </li>
             </ul>
           </nav>
 
