@@ -5,17 +5,17 @@ E-commerce desarrollado como proyecto grupal, enfocado en construir una experien
 
 ## 📅 Información del proyecto
 
-* **Equipo:** 5 integrantes
+* **Equipo:** Grupo E
 * **Entrega:** Sprint 3 y Sprint 4
 * **Tipo de proyecto:** E-commerce
 
 ## 👥 Integrantes
 
-*  — [GitHub](https://github.com/usuario)
-*  — 
-* [Nombre del integrante 3] — [GitHub](https://github.com/usuario)
-* [Nombre del integrante 4] — [GitHub](https://github.com/usuario)
-* [Nombre del integrante 5] — [GitHub](https://github.com/usuario)
+* Juan Ignacio Sotomayor
+* Mariel Gutiérrez
+* Marcos Gabriel Sánchez Matus
+* Araceli Virginia Mendoza 
+* Florencia Mainoli
 
 ## 📖 Descripción del proyecto
 
