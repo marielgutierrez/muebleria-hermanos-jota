@@ -1,0 +1,48 @@
+import { NavLink } from "react-router-dom";
+
+function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
+  return (
+    <header className="site-header">
+      <div className="container header__inner">
+        <div className="logo">
+          <img
+            src="/images/logo-HJ.png"
+            alt="imagen logo"
+            className="logo__img"
+            width="40"
+            height="40"
+          />
+          <span className="logo__text">Hermanos Jota</span>
+        </div>
+
+        <div className="header__right">
+          <nav className="main-nav" aria-label="Navegación principal">
+            <ul className="main-nav__list">
+              <li>
+                <NavLink to="/" end>Inicio</NavLink>
+              </li>
+              <li>
+                <NavLink to="/productos">Productos</NavLink>
+              </li>
+              <li>
+                <NavLink to="/contacto">Contacto</NavLink>
+              </li>
+            </ul>
+          </nav>
+
+          <button
+            type="button"
+            className="cart-button"
+            aria-label={`Ver carrito de compras, ${cantidadCarrito} productos`}
+            onClick={onAbrirCarrito}
+          >
+            <span className="cart-button__icon" aria-hidden="true">🛒</span>
+            <span className="cart-button__count">{cantidadCarrito}</span>
+          </button>
+        </div>
+      </div>
+    </header>
+  );
+}
+
+export default Navbar;
