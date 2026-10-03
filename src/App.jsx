@@ -44,24 +44,31 @@ function App() {
 
   // función para agregar un producto al carrito
   const agregarAlCarrito = (producto, cantidad = 1) => {
+    if (!producto || producto.id === undefined) return;
+    const cantidadNumerica = Math.max(1, Number(cantidad) || 1);
+
     setCarrito((prevCarrito) => {
-      const existe = prevCarrito.find((item) => item.id === producto.id);
+      const existe = prevCarrito.find(
+        (item) => Number(item.id) === Number(producto.id)
+      );
 
       if (existe) {
         return prevCarrito.map((item) =>
-          item.id === producto.id
-            ? { ...item, cantidad: item.cantidad + cantidad }
+          Number(item.id) === Number(producto.id)
+            ? { ...item, cantidad: item.cantidad + cantidadNumerica }
             : item
         );
       }
 
-      return [...prevCarrito, { ...producto, cantidad }];
+      return [...prevCarrito, { ...producto, cantidad: cantidadNumerica }];
     });
   };
 
   // función para eliminar un producto del carrito por su ID
   const eliminarDelCarrito = (id) => {
-    setCarrito((prevCarrito) => prevCarrito.filter((item) => item.id !== id));
+    setCarrito((prevCarrito) =>
+      prevCarrito.filter((item) => Number(item.id) !== Number(id))
+    );
   };
 
   // función para vaciar completamente el carrito
