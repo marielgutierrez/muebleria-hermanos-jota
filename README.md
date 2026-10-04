@@ -1,4 +1,3 @@
-# muebleria-hermanos-jota
 # Mueblería Hermanos Jota - E-commerce
 
 E-commerce desarrollado como proyecto grupal, enfocado en construir una experiencia de compra interactiva para una mueblería. El proyecto integra un frontend desarrollado con React y un backend construido con Node.js y Express, que permite consultar los productos mediante una API REST.
@@ -83,15 +82,37 @@ El sitio simula una tienda online de muebles, con una interfaz responsiva y comp
 * **Git & GitHub** — control de versiones y trabajo colaborativo.
 
 
-
-
 * La comunicación entre ambas partes se realiza mediante solicitudes HTTP utilizando `fetch`.
 * El trabajo se organiza en equipo mediante Git y GitHub, utilizando ramas para desarrollar e integrar cambios.
-* ## 🚀 Instrucciones de Instalación y Ejecución
+## 🚀 Instrucciones de Instalación y Ejecución
 
 Para ejecutar el proyecto de forma local, sigue los siguientes pasos:
+Necesitás tener instalados [Node.js](https://nodejs.org/) (v18 o superior) y Git. El proyecto tiene dos partes que se ejecutan **al mismo tiempo, cada una en su propia terminal**.
 
 ### 1. Clonar el repositorio
+
 ```bash
-git clone [https://github.com/marielgutierrez/muebleria-hermanos-jota.git](https://github.com/marielgutierrez/muebleria-hermanos-jota.git)
+git clone https://github.com/marielgutierrez/muebleria-hermanos-jota.git
 cd muebleria-hermanos-jota
+```
+
+### 2. Levantar el backend (API REST)
+
+```bash
+cd backend
+npm install
+npm start
+```
+
+El servidor queda corriendo en `http://localhost:3000`.
+
+### 3. Levantar el frontend (React)
+
+En una **segunda terminal**, desde la raíz del proyecto:
+
+```bash
+npm install
+npm run dev
+```
+
+La aplicación queda disponible en `http://localhost:5173`.
