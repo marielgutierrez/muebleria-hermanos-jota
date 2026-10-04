@@ -1,8 +1,11 @@
+import { useEffect } from "react";
 import ProductList from "../components/ProductList";
 import Hero from "../components/Hero";
 
-
 function Productos({ productos = [], onAgregar }) {
+  useEffect(() => {
+    document.title = "Productos | Hermanos Jota";
+  }, []);
   return (
     <>
     <Hero
