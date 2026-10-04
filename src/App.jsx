@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
@@ -9,40 +9,37 @@ import Productos from "./pages/Productos";
 import Contacto from "./pages/Contacto";
 import ProductoDetalle from "./pages/ProductoDetallel";
 
-// DATOS DE PRUEBA TEMPORALES
-// TODO: Reemplazar por los productos obtenidos mediante fetch de la API.
-const productosPrueba = [
-  {
-    id: 1,
-    name: "Sillón Copacabana",
-    category: "Living",
-    material: "Cuero curtido vegetal, acero pintado",
-    price: 185000,
-    image: "/images/products/sillon-copacabana.png",
-    description: "Sillón lounge en cuero cognac con base giratoria en acero Burnt Sienna.",
-  },
-  {
-    id: 2,
-    name: "Rack",
-    price: 180000,
-    image: "https://via.placeholder.com/300",
-  },
-  {
-    id: 3,
-    name: "Mesa",
-    price: 180000,
-    image: "https://via.placeholder.com/300",
-  },
-];
-
 function App() {
-  // estado del carrito
-  const [carrito, setCarrito] = useState([]);
+  // Estados para la carga de productos de la API
+  const [productos, setProductos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // estado para mostrar el modal del carrito
+  // Estado del carrito
+  const [carrito, setCarrito] = useState([]);
+  // Estado para mostrar el modal del carrito
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
-  // función para agregar un producto al carrito
+  // PETICIÓN FETCH A LA API DE PRODUCTOS
+  useEffect(() => {
+    fetch("http://localhost:5000/api/productos")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error("No se pudieron obtener los productos del servidor");
+        }
+        return res.json();
+      })
+      .then((data) => {
+        setProductos(data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setError(err.message);
+        setLoading(false);
+      });
+  }, []);
+
+  // Función para agregar un producto al carrito
   const agregarAlCarrito = (producto, cantidad = 1) => {
     if (!producto || producto.id === undefined) return;
     const cantidadNumerica = Math.max(1, Number(cantidad) || 1);
@@ -64,19 +61,19 @@ function App() {
     });
   };
 
-  // función para eliminar un producto del carrito por su ID
+  // Función para eliminar un producto del carrito por su ID
   const eliminarDelCarrito = (id) => {
     setCarrito((prevCarrito) =>
       prevCarrito.filter((item) => Number(item.id) !== Number(id))
     );
   };
 
-  // función para vaciar completamente el carrito
+  // Función para vaciar completamente el carrito
   const vaciarCarrito = () => {
     setCarrito([]);
   };
 
-  // contador de productos
+  // Contador de productos
   const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
 
   return (
@@ -86,22 +83,28 @@ function App() {
         onAbrirCarrito={() => setMostrarCarrito(true)}
       />
 
-      <main>
-        <Routes>
-          <Route
-            path="/"
-            element={<Inicio productos={productosPrueba} onAgregar={agregarAlCarrito} />}
-          />
-          <Route
-            path="/productos"
-            element={<Productos productos={productosPrueba} onAgregar={agregarAlCarrito} />}
-          />
-          <Route path="/contacto" element={<Contacto />} />
-          <Route
-            path="/productos/:id"
-            element={<ProductoDetalle productos={productosPrueba} onAgregar={agregarAlCarrito} />}
-          />
-        </Routes>
+      <main style={{ minHeight: "80vh", padding: "20px" }}>
+        {/* Manejo de estados de Carga y Error */}
+        {loading && <p style={{ textAlign: "center" }}>Cargando productos...</p>}
+        {error && <p style={{ color: "red", textAlign: "center" }}>Error: {error}</p>}
+
+        {!loading && !error && (
+          <Routes>
+            <Route
+              path="/"
+              element={<Inicio productos={productos} onAgregar={agregarAlCarrito} />}
+            />
+            <Route
+              path="/productos"
+              element={<Productos productos={productos} onAgregar={agregarAlCarrito} />}
+            />
+            <Route path="/contacto" element={<Contacto />} />
+            <Route
+              path="/productos/:id"
+              element={<ProductoDetalle productos={productos} onAgregar={agregarAlCarrito} />}
+            />
+          </Routes>
+        )}
       </main>
 
       {/* Vista modal del carrito */}
@@ -119,4 +122,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
