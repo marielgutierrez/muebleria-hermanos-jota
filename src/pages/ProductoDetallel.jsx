@@ -7,9 +7,10 @@ function ProductoDetalle({ productos = [], onAgregar }) {
   const { id } = useParams();
   const producto = productos.find((p) => p.id === Number(id));
 
-  // Reemplaza el pageTitle que cambiabas a mano en el JS viejo
   useEffect(() => {
-if (producto) document.title = `${producto.name} | Hermanos Jota`;
+    if (producto) {
+      document.title = `${producto.name || producto.nombre} | Hermanos Jota`;
+    }
     return () => {
       document.title = "Hermanos Jota";
     };
