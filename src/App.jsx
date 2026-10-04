@@ -20,9 +20,9 @@ function App() {
   // Estado para mostrar el modal del carrito
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
-  // PETICIÓN FETCH A LA API DE PRODUCTOS
+  // PETICIÓN FETCH A LA API DE PRODUCTOS (Puerto 3000)
   useEffect(() => {
-    fetch("http://localhost:5000/api/productos")
+    fetch("http://localhost:3000/api/productos")
       .then((res) => {
         if (!res.ok) {
           throw new Error("No se pudieron obtener los productos del servidor");
