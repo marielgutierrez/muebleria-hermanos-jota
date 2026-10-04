@@ -87,3 +87,11 @@ El sitio simula una tienda online de muebles, con una interfaz responsiva y comp
 
 * La comunicación entre ambas partes se realiza mediante solicitudes HTTP utilizando `fetch`.
 * El trabajo se organiza en equipo mediante Git y GitHub, utilizando ramas para desarrollar e integrar cambios.
+* ## 🚀 Instrucciones de Instalación y Ejecución
+
+Para ejecutar el proyecto de forma local, sigue los siguientes pasos:
+
+### 1. Clonar el repositorio
+```bash
+git clone [https://github.com/marielgutierrez/muebleria-hermanos-jota.git](https://github.com/marielgutierrez/muebleria-hermanos-jota.git)
+cd muebleria-hermanos-jota
