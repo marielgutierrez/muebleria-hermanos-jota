@@ -24,7 +24,7 @@ const datosContacto = [
   {
     titulo: "Encargos a medida",
     lineas: [
-      "Trabamos piezas únicas en nogal, algarrobo y guatambú certificados. El plazo estimado de fabricación es de 6 a 10 semanas según complejidad.",
+      "Trabajamos piezas únicas en nogal, algarrobo y guatambú certificados. El plazo estimado de fabricación es de 6 a 10 semanas según complejidad.",
     ],
   },
 ];
@@ -34,7 +34,7 @@ function Contacto() {
     <>
     <Hero
   titulo={<>Hablemos de tu próxima pieza</>}
-  subtitulo="Ya sea un encargo a medida, una visita al taller o una duda sobre materiales, del otro lado hay personas que trabajan la madera todos los días. Escribinos y te respondemos con nombre y apellid."
+  subtitulo="Ya sea un encargo a medida, una visita al taller o una duda sobre materiales, del otro lado hay personas que trabajan la madera todos los días. Escribinos y te respondemos con nombre y apellido."
   compacto
 />  
     <section className="contacto">

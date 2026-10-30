@@ -8,7 +8,7 @@ function ProductList({ productos = [], titulo }) {
 
         <div className="products-grid">
           {productos.map((producto) => (
-            <ProductCard key={producto.id} producto={producto} />
+            <ProductCard key={producto._id} producto={producto} />
           ))}
         </div>
       </div>
