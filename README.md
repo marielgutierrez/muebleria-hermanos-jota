@@ -56,11 +56,11 @@ React no se conecta a la base de datos: hace peticiones HTTP a Express, y Expres
  
 | Método | Endpoint | Descripción | Éxito |
 | --- | --- | --- | --- |
-| GET | `/api/productos` | Todos los productos | `200` |
-| GET | `/api/productos/:id` | Un producto por `_id` | `200` |
-| POST | `/api/productos` | Crea un producto | `201` |
-| PUT | `/api/productos/:id` | Actualiza un producto | `200` |
-| DELETE | `/api/productos/:id` | Elimina un producto | `200` |
+| GET | `/api/products` | Todos los productos | `200` |
+| GET | `/api/products/:id` | Un producto por `_id` | `200` |
+| POST | `/api/products` | Crea un producto | `201` |
+| PUT | `/api/products/:id` | Actualiza un producto | `200` |
+| DELETE | `/api/products/:id` | Elimina un producto | `200` |
  
 Los errores se devuelven como `{ "message": "..." }`: `400` (datos o `id` inválidos), `404` (producto o ruta inexistente) y `500` (error del servidor).
  
@@ -69,9 +69,9 @@ Los errores se devuelven como `{ "message": "..." }`: `400` (datos o `id` invál
 | Ruta | Página |
 | --- | --- |
 | `/` | Inicio |
-| `/productos` | Catálogo (datos de la API) |
-| `/productos/:id` | Detalle (`useParams`) |
-| `/contacto` | Formulario de contacto |
+| `/products` | Catálogo (datos de la API) |
+| `/products/:id` | Detalle (`useParams`) |
+| `/contact` | Formulario de contacto |
 | `/admin/crear-producto` | Alta de producto |
  
 Desde la interfaz se pueden crear, editar y eliminar productos (con confirmación previa). Tras cada acción se navega con `useNavigate` y se muestran mensajes de éxito o error.
