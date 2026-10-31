@@ -9,7 +9,7 @@ function ProductList({ productos = [], titulo, onAgregar }) {
         <div className="products-grid">
           {productos.map((producto) => (
             <ProductCard
-              key={producto.id}
+              key={producto.id !== undefined ? producto.id : producto._id}
               producto={producto}
               onAgregar={onAgregar}
             />
