@@ -1,0 +1,72 @@
+const productos = [
+  {
+    "id": 1,
+    "name": "Sillón Copacabana",
+    "category": "Living",
+    "material": "Cuero curtido vegetal, acero pintado",
+    "price": 185000,
+    "measurements": "90 × 85 × 95 cm",
+    "image": "/images/products/sillon-copacabana.png",
+    "description": "Sillón lounge en cuero cognac con base giratoria en acero Burnt Sienna, inspirado en la estética brasilera moderna de los 60.",
+    "nombre": "Sillón Copacabana",
+    "precio": 185000,
+    "categoria": "Living",
+    "descripcion": "Sillón lounge en cuero cognac con base giratoria en acero Burnt Sienna, inspirado en la estética brasilera moderna de los 60.",
+    "imageUrl": "/images/products/sillon-copacabana.png",
+    "medidas": "90 × 85 × 95 cm",
+    "stock": 1
+  },
+  {
+    "id": 2,
+    "name": "Biblioteca Recoleta",
+    "category": "Almacenamiento",
+    "material": "Estructura de acero, estantes de roble",
+    "price": 232000,
+    "measurements": "100 × 35 × 200 cm",
+    "image": "/images/products/biblioteca-recoleta.png",
+    "description": "Sistema modular de estantes abierto con estructura Sage Green y repisas en roble claro, ideal para colecciones y objetos de diseño.",
+    "nombre": "Biblioteca Recoleta",
+    "precio": 232000,
+    "categoria": "Almacenamiento",
+    "descripcion": "Sistema modular de estantes abierto con estructura Sage Green y repisas en roble claro, ideal para colecciones y objetos de diseño.",
+    "imageUrl": "/images/products/biblioteca-recoleta.png",
+    "medidas": "100 × 35 × 200 cm",
+    "stock": 3
+  },
+  {
+    "id": 3,
+    "name": "Aparador Uspallata",
+    "category": "Almacenamiento",
+    "material": "Nogal macizo FSC®, herrajes de latón",
+    "price": 210000,
+    "measurements": "180 × 45 × 75 cm",
+    "image": "/images/products/aparador-uspallata.png",
+    "description": "Aparador de seis puertas fabricado en nogal sostenible con tiradores metálicos en acabado latón y silueta minimalista.",
+    "nombre": "Aparador Uspallata",
+    "precio": 210000,
+    "categoria": "Almacenamiento",
+    "descripcion": "Aparador de seis puertas fabricado en nogal sostenible con tiradores metálicos en acabado latón y silueta minimalista.",
+    "imageUrl": "/images/products/aparador-uspallata.png",
+    "medidas": "180 × 45 × 75 cm",
+    "stock": 2
+  },
+  {
+    "id": 4,
+    "name": "Butaca Mendoza",
+    "category": "Living",
+    "material": "Guatambú macizo, tela bouclé",
+    "price": 98000,
+    "measurements": "80 × 75 × 85 cm",
+    "image": "/images/products/butaca-mendoza.png",
+    "description": "Butaca tapizada en bouclé Dusty Rose con base de madera de guatambú y respaldo curvo de máximo confort.",
+    "nombre": "Butaca Mendoza",
+    "precio": 98000,
+    "categoria": "Living",
+    "descripcion": "Butaca tapizada en bouclé Dusty Rose con base de madera de guatambú y respaldo curvo de máximo confort.",
+    "imageUrl": "/images/products/butaca-mendoza.png",
+    "medidas": "80 × 75 × 85 cm",
+    "stock": 4
+  }
+];
+
+module.exports = productos;

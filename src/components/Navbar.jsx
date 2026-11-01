@@ -1,6 +1,6 @@
 import { NavLink } from "react-router-dom";
 
-function Navbar({ cantidadCarrito = 0 }) {
+function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
   return (
     <header className="site-header">
       <div className="container header__inner">
@@ -27,6 +27,9 @@ function Navbar({ cantidadCarrito = 0 }) {
               <li>
                 <NavLink to="/contacto">Contacto</NavLink>
               </li>
+              <li>
+                <NavLink to="/admin" className="nav-admin-link">Admin</NavLink>
+              </li>
             </ul>
           </nav>
 
@@ -34,6 +37,7 @@ function Navbar({ cantidadCarrito = 0 }) {
             type="button"
             className="cart-button"
             aria-label={`Ver carrito de compras, ${cantidadCarrito} productos`}
+            onClick={onAbrirCarrito}
           >
             <span className="cart-button__icon" aria-hidden="true">🛒</span>
             <span className="cart-button__count">{cantidadCarrito}</span>

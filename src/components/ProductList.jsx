@@ -1,6 +1,6 @@
 import ProductCard from "./ProductCard";
 
-function ProductList({ productos = [], titulo }) {
+function ProductList({ productos = [], titulo, onAgregar }) {
   return (
     <section className="featured">
       <div className="container">
@@ -8,7 +8,11 @@ function ProductList({ productos = [], titulo }) {
 
         <div className="products-grid">
           {productos.map((producto) => (
-            <ProductCard key={producto._id} producto={producto} />
+            <ProductCard
+              key={producto.id !== undefined ? producto.id : producto._id}
+              producto={producto}
+              onAgregar={onAgregar}
+            />
           ))}
         </div>
       </div>
