@@ -1,11 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "API backend de Mueblería Hermanos Jota con Express y MongoDB",
+  "main": "server.js",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "seed": "node src/seed.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

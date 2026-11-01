@@ -5,7 +5,7 @@
 
 const getBaseUrl = () => {
   const envUrl = import.meta.env.VITE_API_URL;
-  if (!envUrl) return "http://localhost:3000/api/productos";
+  if (!envUrl) return "http://localhost:4000/api/productos";
   if (envUrl.endsWith("/productos") || envUrl.endsWith("/products")) {
     return envUrl;
   }

@@ -156,7 +156,7 @@ function App() {
           <div style={{ maxWidth: "600px", margin: "2rem auto", textAlign: "center", color: "#c0392b" }}>
             <p><strong>Aviso:</strong> {error}</p>
             <p style={{ fontSize: "0.9rem", color: "#666" }}>
-              Verificá que el backend esté corriendo en el puerto 3000 (cd backend && npm run dev / node server.js).
+              Verificá que el backend esté corriendo en el puerto 4000 (cd backend && npm run dev / node server.js).
             </p>
           </div>
         )}
