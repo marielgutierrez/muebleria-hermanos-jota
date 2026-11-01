@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "npm --prefix backend test",
+    "test:backend": "npm --prefix backend test",
+    "start:backend": "npm --prefix backend start"
   },
   "dependencies": {
     "react": "^19.2.8",

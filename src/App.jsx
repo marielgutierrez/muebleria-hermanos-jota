@@ -28,7 +28,7 @@ function App() {
   // Estado para mostrar el modal del carrito
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
-  // Función para cargar / recargar productos desde la API (puerto 3000)
+  // Función para cargar / recargar productos desde la API
   const cargarProductos = useCallback(async () => {
     try {
       const data = await getProductos();
@@ -153,11 +153,45 @@ function App() {
         {/* Manejo de estados de Carga y Error de inicio */}
         {loading && <p style={{ textAlign: "center", padding: "2rem" }}>Cargando catálogo...</p>}
         {error && (
-          <div style={{ maxWidth: "600px", margin: "2rem auto", textAlign: "center", color: "#c0392b" }}>
-            <p><strong>Aviso:</strong> {error}</p>
-            <p style={{ fontSize: "0.9rem", color: "#666" }}>
-              Verificá que el backend esté corriendo en el puerto 4000 (cd backend && npm run dev / node server.js).
+          <div
+            style={{
+              maxWidth: "600px",
+              margin: "2rem auto",
+              textAlign: "center",
+              color: "#c0392b",
+              padding: "1.5rem",
+              border: "1px solid #f5c6cb",
+              borderRadius: "8px",
+              background: "#fdf7f7",
+            }}
+          >
+            <p style={{ fontWeight: 600, fontSize: "1.05rem" }}>
+              Aviso: {error}
             </p>
+            <p style={{ fontSize: "0.9rem", color: "#666", marginTop: "0.5rem" }}>
+              {import.meta.env.PROD
+                ? "Si el backend en Render se encuentra suspendido por inactividad (plan gratuito), puede demorar unos 40 segundos en reactivarse. Verificá también que la variable VITE_API_URL apunte a la URL del backend en Render."
+                : "Verificá que el backend esté corriendo en el puerto 4000 (cd backend && npm run dev / node server.js)."}
+            </p>
+            <button
+              onClick={() => {
+                setLoading(true);
+                setError(null);
+                cargarProductos();
+              }}
+              style={{
+                marginTop: "1rem",
+                padding: "8px 18px",
+                backgroundColor: "#2c3e50",
+                color: "#fff",
+                border: "none",
+                borderRadius: "4px",
+                cursor: "pointer",
+                fontWeight: 500,
+              }}
+            >
+              Reintentar conexión
+            </button>
           </div>
         )}
 

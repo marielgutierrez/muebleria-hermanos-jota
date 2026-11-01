@@ -6,6 +6,7 @@ const app = express();
 
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  "https://hermanos-jota-store.netlify.app",
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:3000",
@@ -13,23 +14,32 @@ const allowedOrigins = [
   "http://127.0.0.1:5174",
 ].filter(Boolean);
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true);
-      if (
-        allowedOrigins.indexOf(origin) !== -1 ||
-        /^http:\/\/localhost:\d+$/.test(origin) ||
-        /^http:\/\/127\.0\.0\.1:\d+$/.test(origin)
-      ) {
-        return callback(null, true);
-      }
-      return callback(null, true);
-    },
-    credentials: true,
-  })
-);
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Permitir peticiones sin origin (herramientas server-to-server, curl, Postman, Node)
+    if (!origin) return callback(null, true);
 
+    const isExplicit = allowedOrigins.includes(origin);
+    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+    const isDeploy =
+      /\.netlify\.app$/.test(origin) ||
+      /\.vercel\.app$/.test(origin) ||
+      /\.onrender\.com$/.test(origin);
+
+    if (isExplicit || isLocalhost || isDeploy) {
+      return callback(null, true);
+    }
+
+    // Permitir en desarrollo/producción general para evitar rechazos inesperados de CORS
+    return callback(null, true);
+  },
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -41,12 +51,30 @@ app.use((req, res, next) => {
   next();
 });
 
-// Soportar tanto /api/products como /api/productos para compatibilidad total
+// Soportar tanto /api/products como /api/productos y rutas directas para compatibilidad total
 app.use("/api/products", productRoutes);
 app.use("/api/productos", productRoutes);
+app.use("/products", productRoutes);
+app.use("/productos", productRoutes);
 
-// Endpoint de verificación de estado
+// Endpoint raíz y de verificación de salud (necesario para Render health checks)
+app.get("/", (req, res) => {
+  res.status(200).json({
+    status: "ok",
+    message: "API Mueblería Hermanos Jota activa",
+    endpoints: {
+      productos: "/api/productos",
+      products: "/api/products",
+      health: "/api/health",
+    },
+  });
+});
+
 app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "ok", message: "API Mueblería Hermanos Jota activa" });
+});
+
+app.get("/health", (req, res) => {
   res.status(200).json({ status: "ok", message: "API Mueblería Hermanos Jota activa" });
 });
 

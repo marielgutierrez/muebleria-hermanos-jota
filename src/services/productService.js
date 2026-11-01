@@ -3,23 +3,35 @@
  * Conecta el frontend con la API de Express (GET, POST, PUT, DELETE)
  */
 
-const getBaseUrl = () => {
-  const envUrl = import.meta.env.VITE_API_URL;
-  if (!envUrl) return "http://localhost:4000/api/productos";
-  if (envUrl.endsWith("/productos") || envUrl.endsWith("/products")) {
-    return envUrl;
-  }
-  return `${envUrl.replace(/\/$/, "")}/productos`;
-};
+export const getBaseUrl = () => {
+  const envUrl = (typeof import.meta !== "undefined" && import.meta.env?.VITE_API_URL) || "";
 
-const API_BASE = getBaseUrl();
+  if (!envUrl || !envUrl.trim()) {
+    return "http://localhost:4000/api/productos";
+  }
+
+  const clean = envUrl.trim().replace(/\/+$/, "");
+
+  // Si la URL ya termina explícitamente en /productos o /products
+  if (clean.endsWith("/productos") || clean.endsWith("/products")) {
+    return clean;
+  }
+
+  // Si termina en /api
+  if (clean.endsWith("/api")) {
+    return `${clean}/productos`;
+  }
+
+  // Si es la URL raíz del servidor (ej: https://mi-backend.onrender.com)
+  return `${clean}/api/productos`;
+};
 
 /**
  * Obtener todos los productos (GET)
  */
 export async function getProductos() {
   try {
-    const res = await fetch(API_BASE);
+    const res = await fetch(getBaseUrl());
     if (!res.ok) {
       throw new Error(`Error ${res.status}: No se pudieron obtener los productos.`);
     }
@@ -35,7 +47,7 @@ export async function getProductos() {
  */
 export async function getProductoById(id) {
   try {
-    const res = await fetch(`${API_BASE}/${id}`);
+    const res = await fetch(`${getBaseUrl()}/${id}`);
     if (!res.ok) {
       if (res.status === 404) {
         throw new Error("Producto no encontrado.");
@@ -54,7 +66,7 @@ export async function getProductoById(id) {
  */
 export async function createProducto(productoData) {
   try {
-    const res = await fetch(API_BASE, {
+    const res = await fetch(getBaseUrl(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -81,7 +93,7 @@ export async function createProducto(productoData) {
  */
 export async function updateProducto(id, productoData) {
   try {
-    const res = await fetch(`${API_BASE}/${id}`, {
+    const res = await fetch(`${getBaseUrl()}/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -108,7 +120,7 @@ export async function updateProducto(id, productoData) {
  */
 export async function deleteProducto(id) {
   try {
-    const res = await fetch(`${API_BASE}/${id}`, {
+    const res = await fetch(`${getBaseUrl()}/${id}`, {
       method: "DELETE",
     });
 
@@ -132,3 +144,17 @@ export const getProductById = getProductoById;
 export const createProduct = createProducto;
 export const updateProduct = updateProducto;
 export const deleteProduct = deleteProducto;
+
+export default {
+  getProductos,
+  getProductoById,
+  createProducto,
+  updateProducto,
+  deleteProducto,
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getBaseUrl,
+};
