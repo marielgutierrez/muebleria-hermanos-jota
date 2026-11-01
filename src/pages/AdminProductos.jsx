@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Hero from "../components/Hero";
 import { getProductos, deleteProducto } from "../services/productService";
 
-function AdminProductos({ onProductoModificado }) {
-  const navigate = useNavigate();
+function AdminProductos({ onProductoModificado }) {
   const [productos, setProductos] = useState([]);
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState(null);
