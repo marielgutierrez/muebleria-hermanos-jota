@@ -21,7 +21,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use("/api/products", productRoutes);
+app.use("/api/productos", productRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Route not found" });
