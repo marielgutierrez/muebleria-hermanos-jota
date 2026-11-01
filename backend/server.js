@@ -1,16 +1,17 @@
+require('dotenv').config(); // Cargar las variables del archivo .env
 const express = require("express");
-const cors = require("cors");
-const logger = require("./middleware/logger");
-const productosRoutes = require("./routes/productos.routes");
+const connectDB = require('./src/config/db'); // Traer la función de conexión
 
 const app = express();
-app.use(cors());
+
+// Middleware
 app.use(express.json());
-app.use(logger);
 
-app.use("/api/productos", productosRoutes);
+// Conectar a MongoDB
+connectDB();
 
-const PORT = 3000;
+// Usar el puerto que definieron en el grupo (4000)
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
   console.log(`Servidor funcionando en puerto ${PORT}`);
