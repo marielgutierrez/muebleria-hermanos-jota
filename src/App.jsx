@@ -92,7 +92,7 @@ function App() {
 
       if (existe) {
         return prevCarrito.map((item) =>
-          Number(item.id || item._id) === Number(id)
+       String(item.id || item._id) === String(id)
             ? { ...item, cantidad: item.cantidad + cantidadNumerica, stock }
             : item
         );

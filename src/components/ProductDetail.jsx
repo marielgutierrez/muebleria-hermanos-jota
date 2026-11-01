@@ -16,7 +16,7 @@ function ProductDetail({ producto, onAgregar }) {
     category: categoria,
     material,
     price: precio,
-    image: imagen,
+    imageUrl: imagen,
     description: descripcion,
     highlights: destacados = [],
     manufacturing: fabricacion,
