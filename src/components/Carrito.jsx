@@ -1,7 +1,13 @@
 import { Link } from "react-router-dom";
 
 // Componente para mostrar y gestionar los elementos del carrito de compras
-function Carrito({ carrito, onEliminar, onVaciar, onCerrar }) {
+function Carrito({
+  carrito,
+  onEliminar,
+  onVaciar,
+  onCerrar,
+  onCambiarCantidad,
+}) {
   // Calculamos el precio total sumando el subtotal de cada producto
   const total = carrito.reduce(
     (acumulador, item) =>
@@ -45,7 +51,9 @@ function Carrito({ carrito, onEliminar, onVaciar, onCerrar }) {
               {carrito.map((item) => {
                 const nombre = item.name || item.nombre;
                 const precio = Number(item.price || item.precio || 0);
-                const imagen = item.image || item.imagen;
+                const imagen = item.image || item.imageUrl || item.imagen;
+                const stockItem = item.stock !== undefined ? Number(item.stock) : 5;
+                const alMaximoStock = item.cantidad >= stockItem;
 
                 return (
                   <li key={item.id} className="cart-item">
@@ -53,12 +61,45 @@ function Carrito({ carrito, onEliminar, onVaciar, onCerrar }) {
                       src={imagen}
                       alt={nombre}
                       className="cart-item__image"
+                      onError={(e) => {
+                        e.target.src = "/images/products/sillon-copacabana.png";
+                      }}
                     />
                     <div className="cart-item__details">
                       <h3 className="cart-item__name">{nombre}</h3>
                       <p className="cart-item__price">
-                        ${precio.toLocaleString("es-AR")} x {item.cantidad}
+                        ${precio.toLocaleString("es-AR")} c/u
                       </p>
+
+                      {/* Control de cantidad dentro del carrito que respeta el stock */}
+                      <div className="cart-item__qty-wrapper">
+                        <div className="cart-item__qty-controls">
+                          <button
+                            type="button"
+                            className="cart-item__qty-btn"
+                            onClick={() => onCambiarCantidad?.(item.id, item.cantidad - 1)}
+                            disabled={item.cantidad <= 1}
+                            aria-label="Disminuir cantidad"
+                          >
+                            −
+                          </button>
+                          <span className="cart-item__qty-number">{item.cantidad}</span>
+                          <button
+                            type="button"
+                            className="cart-item__qty-btn"
+                            onClick={() => onCambiarCantidad?.(item.id, item.cantidad + 1)}
+                            disabled={alMaximoStock}
+                            aria-label="Aumentar cantidad"
+                            title={alMaximoStock ? "Stock máximo alcanzado" : "Aumentar cantidad"}
+                          >
+                            +
+                          </button>
+                        </div>
+                        <span className="cart-item__stock-indicator">
+                          (máx. {stockItem} u.)
+                        </span>
+                      </div>
+
                       <p className="cart-item__subtotal">
                         Subtotal: ${(precio * item.cantidad).toLocaleString("es-AR")}
                       </p>

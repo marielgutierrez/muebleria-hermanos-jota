@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 
 const formatPrice = (precio) =>
   Number(precio).toLocaleString("es-AR", {
@@ -8,31 +9,62 @@ const formatPrice = (precio) =>
   });
 
 function ProductDetail({ producto, onAgregar }) {
-  const [cantidad, setCantidad] = useState(1);
+  const {
+    id,
+    _id,
+    name: nombre,
+    category: categoria,
+    material,
+    price: precio,
+    image: imagen,
+    description: descripcion,
+    highlights: destacados = [],
+    manufacturing: fabricacion,
+    specs: especificaciones = {},
+  } = producto;
+
+  const stock = Number(producto.stock !== undefined ? producto.stock : 5);
+  const sinStock = stock <= 0;
+
+  const [cantidad, setCantidad] = useState(sinStock ? 0 : 1);
   const [agregado, setAgregado] = useState(false);
 
-  const {
-  name: nombre,
-  category: categoria,
-  material,
-  price: precio,
-  image: imagen,
-  description: descripcion,
-  highlights: destacados = [],
-  manufacturing: fabricacion,
-  specs: especificaciones = {},
-} = producto;
+  // Sincronizar cantidad si cambia el producto
+  useEffect(() => {
+    setCantidad(sinStock ? 0 : 1);
+    setAgregado(false);
+  }, [producto.id, producto._id, sinStock]);
 
   const cambiarCantidad = (valor) => {
+    if (sinStock) {
+      setCantidad(0);
+      return;
+    }
     const n = parseInt(valor, 10);
-    setCantidad(Math.min(10, Math.max(1, n || 1)));
+    if (isNaN(n) || n < 1) {
+      setCantidad(1);
+    } else if (n > stock) {
+      setCantidad(stock);
+    } else {
+      setCantidad(n);
+    }
   };
 
   const handleAgregar = () => {
-    onAgregar?.(producto, cantidad);
-    setAgregado(true);
-    setTimeout(() => setAgregado(false), 1500);
+    if (sinStock || cantidad <= 0) return;
+    if (cantidad > stock) {
+      alert(`No podés agregar más de ${stock} unidades (stock máximo disponible).`);
+      return;
+    }
+
+    const exito = onAgregar?.(producto, cantidad);
+    if (exito !== false) {
+      setAgregado(true);
+      setTimeout(() => setAgregado(false), 1500);
+    }
   };
+
+  const productoId = id !== undefined ? id : _id;
 
   return (
     <section className="product-detail" aria-labelledby="productTitle">
@@ -42,6 +74,11 @@ function ProductDetail({ producto, onAgregar }) {
             <div className="product-detail__image-wrapper">
               <img src={imagen} alt={nombre} className="product-detail__image" />
               <span className="product-detail__badge">Pieza de Autor · Hecho a mano</span>
+              {sinStock && (
+                <span className="product-detail__stock-overlay">
+                  Agotado
+                </span>
+              )}
             </div>
           </div>
 
@@ -53,6 +90,21 @@ function ProductDetail({ producto, onAgregar }) {
             <div className="product-detail__price-box">
               <span className="product-detail__price">{formatPrice(precio)}</span>
               <span className="product-detail__price-note">IVA incluido · Factura A o B</span>
+            </div>
+
+            {/* Indicador visual de disponibilidad y stock */}
+            <div className={`stock-status-banner ${sinStock ? "stock-status-banner--out" : "stock-status-banner--in"}`}>
+              {sinStock ? (
+                <>
+                  <span className="stock-status-icon">⚠️</span>
+                  <span><strong>Sin stock disponible:</strong> Esta pieza se encuentra actualmente agotada.</span>
+                </>
+              ) : (
+                <>
+                  <span className="stock-status-icon">✓</span>
+                  <span>Stock disponible: <strong>{stock} {stock === 1 ? "unidad" : "unidades"}</strong></span>
+                </>
+              )}
             </div>
 
             <div className="product-detail__description">
@@ -70,12 +122,17 @@ function ProductDetail({ producto, onAgregar }) {
             )}
 
             <div className="product-detail__actions">
-              <div className="quantity-control" aria-label="Seleccionar cantidad">
+              {/* Control de cantidad con límites según stock */}
+              <div
+                className={`quantity-control ${sinStock ? "quantity-control--disabled" : ""}`}
+                aria-label="Seleccionar cantidad"
+              >
                 <button
                   type="button"
                   className="quantity-control__btn"
                   aria-label="Disminuir cantidad"
                   onClick={() => cambiarCantidad(cantidad - 1)}
+                  disabled={sinStock || cantidad <= 1}
                 >
                   −
                 </button>
@@ -83,8 +140,9 @@ function ProductDetail({ producto, onAgregar }) {
                   type="number"
                   className="quantity-control__input"
                   value={cantidad}
-                  min="1"
-                  max="10"
+                  min={sinStock ? 0 : 1}
+                  max={stock}
+                  disabled={sinStock}
                   aria-label="Cantidad de unidades"
                   onChange={(e) => cambiarCantidad(e.target.value)}
                 />
@@ -93,20 +151,44 @@ function ProductDetail({ producto, onAgregar }) {
                   className="quantity-control__btn"
                   aria-label="Aumentar cantidad"
                   onClick={() => cambiarCantidad(cantidad + 1)}
+                  disabled={sinStock || cantidad >= stock}
+                  title={cantidad >= stock ? `Límite de stock alcanzado (${stock})` : "Aumentar cantidad"}
                 >
                   +
                 </button>
               </div>
 
+              {/* Botón de compra / agregar */}
               <button
                 type="button"
-                className="btn btn--primary product-detail__buy-btn"
+                className={`btn ${sinStock ? "btn--disabled" : "btn--primary"} product-detail__buy-btn`}
                 onClick={handleAgregar}
+                disabled={sinStock}
+                title={sinStock ? "Esta pieza no tiene stock disponible" : "Agregar al carrito"}
               >
-                <span aria-hidden="true">{agregado ? "✓" : "🛒"}</span>{" "}
-                {agregado ? "¡Agregado al carrito!" : "Agregar al carrito"}
+                <span aria-hidden="true">{sinStock ? "🚫" : agregado ? "✓" : "🛒"}</span>{" "}
+                {sinStock
+                  ? "Sin stock disponible"
+                  : agregado
+                  ? "¡Agregado al carrito!"
+                  : "Agregar al carrito"}
               </button>
+
+              <Link
+                to={`/admin/editar-producto/${productoId}`}
+                className="btn btn--secondary btn--small"
+                title="Editar esta pieza en el panel de administración"
+              >
+                ✎ Editar pieza
+              </Link>
             </div>
+
+            {/* Aviso si la cantidad seleccionada alcanza el stock total */}
+            {!sinStock && cantidad >= stock && stock > 0 && (
+              <p className="product-detail__stock-limit-note">
+                ℹ️ Seleccionaste el total de unidades disponibles ({stock} u.).
+              </p>
+            )}
 
             <div className="product-detail__trust-badges">
               <div className="trust-badge">

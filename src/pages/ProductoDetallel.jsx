@@ -5,7 +5,12 @@ import ProductCard from "../components/ProductCard";
 
 function ProductoDetalle({ productos = [], onAgregar }) {
   const { id } = useParams();
-  const producto = productos.find((p) => p.id === Number(id));
+  const producto = productos.find(
+    (p) =>
+      Number(p.id) === Number(id) ||
+      String(p.id) === String(id) ||
+      String(p._id) === String(id)
+  );
 
   useEffect(() => {
     if (producto) {
@@ -38,12 +43,18 @@ function ProductoDetalle({ productos = [], onAgregar }) {
     );
   }
 
-  const relacionados = productos.filter((p) => p.id !== producto.id).slice(0, 3);
+  const relacionados = productos
+    .filter((p) => (p.id !== undefined ? p.id : p._id) !== (producto.id !== undefined ? producto.id : producto._id))
+    .slice(0, 3);
 
   return (
     <>
       {/* key = id: al pasar a otra pieza, la cantidad vuelve a 1 */}
-      <ProductDetail key={producto.id} producto={producto} onAgregar={onAgregar} />
+      <ProductDetail
+        key={producto.id !== undefined ? producto.id : producto._id}
+        producto={producto}
+        onAgregar={onAgregar}
+      />
 
       <section className="related-products" aria-labelledby="relatedTitle">
         <div className="container">
@@ -53,7 +64,11 @@ function ProductoDetalle({ productos = [], onAgregar }) {
           </p>
           <div className="products-grid">
             {relacionados.map((p) => (
-              <ProductCard key={p.id} producto={p} onAgregar={onAgregar} />
+              <ProductCard
+                key={p.id !== undefined ? p.id : p._id}
+                producto={p}
+                onAgregar={onAgregar}
+              />
             ))}
           </div>
         </div>
