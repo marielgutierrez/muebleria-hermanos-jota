@@ -14,29 +14,29 @@ const allowedOrigins = [
   "http://127.0.0.1:5174",
 ].filter(Boolean);
 
-const corsOptions = {
-  origin: (origin, callback) => {
-    // Permitir peticiones sin origin (herramientas server-to-server, curl, Postman, Node)
-    if (!origin) return callback(null, true);
+      const corsOptions = {
+        origin: (origin, callback) => {
+          // Permitir peticiones sin origin (herramientas server-to-server, curl, Postman, Node)
+          if (!origin) return callback(null, true);
 
-    const isExplicit = allowedOrigins.includes(origin);
-    const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
-    const isDeploy =
-      /\.netlify\.app$/.test(origin) ||
-      /\.vercel\.app$/.test(origin) ||
-      /\.onrender\.com$/.test(origin);
+          const isExplicit = allowedOrigins.includes(origin);
+          const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin);
+          const isDeploy =
+            /\.netlify\.app$/.test(origin) ||
+            /\.vercel\.app$/.test(origin) ||
+            /\.onrender\.com$/.test(origin);
 
-    if (isExplicit || isLocalhost || isDeploy) {
-      return callback(null, true);
+          if (isExplicit || isLocalhost || isDeploy) {
+            return callback(null, true);
     }
 
-    // Permitir en desarrollo/producción general para evitar rechazos inesperados de CORS
-    return callback(null, true);
+// Permitir en desarrollo/producción general para evitar rechazos inesperados de CORS
+return callback(null, true);
   },
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With", "Accept"],
-  credentials: true,
-  optionsSuccessStatus: 200,
+    credentials: true,
+      optionsSuccessStatus: 200,
 };
 
 app.use(cors(corsOptions));
