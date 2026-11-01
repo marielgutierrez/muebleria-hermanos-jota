@@ -940,7 +940,6 @@ h1, h2, h3 {
     font-size: 0.9rem;
     color: var(--color-text);
     background-color: var(--color-white);
-    -moz-appearance: textfield;
 }
 
 .quantity-control__input::-webkit-outer-spin-button,
