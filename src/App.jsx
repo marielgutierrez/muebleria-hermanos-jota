@@ -7,7 +7,7 @@ import Carrito from "./components/Carrito";
 import Inicio from "./pages/Inicio";
 import Productos from "./pages/Productos";
 import Contacto from "./pages/Contacto";
-import ProductoDetalle from "./pages/ProductoDetallel";
+import ProductoDetalle from "./pages/ProductoDetalle";
 
 // Componentes y Rutas del Panel de Administración (Integrante 4)
 import AdminRoutes, {
