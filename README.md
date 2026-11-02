@@ -12,7 +12,6 @@ E-commerce desarrollado como proyecto grupal, enfocado en construir una experien
 
 * Juan Ignacio Sotomayor
 * Mariel Gutiérrez
-* Marcos Gabriel Sánchez Matus
 * Araceli Virginia Mendoza 
 * Florencia Mainoli
 
