@@ -37,13 +37,14 @@ function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
               <li>
                 <NavLink to="/contacto">Contacto</NavLink>
               </li>
+             {isAuthenticated && user?.role === "admin" && (
               <li>
                 <NavLink to="/admin" className="nav-admin-link">
-                  Admin
-                </NavLink>
-              </li>
-
-              {!isAuthenticated ? (
+                 Admin
+                 </NavLink>
+                 </li>
+                )}
+                {!isAuthenticated ? (
                 <>
                   <li>
                     <NavLink to="/login">Iniciar sesión</NavLink>
