@@ -8,6 +8,8 @@ import Inicio from "./pages/Inicio";
 import Productos from "./pages/Productos";
 import Contacto from "./pages/Contacto";
 import ProductoDetalle from "./pages/ProductoDetalle";
+import CarritoPage from "./pages/Carrito";
+import MisPedidos from "./pages/MisPedidos";
 
 // Componentes y Rutas del Panel de Administración (Integrante 4)
 import AdminRoutes, {
@@ -16,6 +18,7 @@ import AdminRoutes, {
   AdminEditarProducto,
 } from "./routes/AdminRoutes";
 import { getProductos } from "./services/productService";
+import useCart from "./context/useCart";
 
 function App() {
   // Estados para la carga de productos de la API
@@ -23,10 +26,14 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estado del carrito
-  const [carrito, setCarrito] = useState([]);
-  // Estado para mostrar el modal del carrito
-  const [mostrarCarrito, setMostrarCarrito] = useState(false);
+  // Carrito global desde Context
+  const {
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    cantidadTotal,
+    sincronizarConInventario,
+  } = useCart();
 
   // Función para cargar / recargar productos desde la API
   const cargarProductos = useCallback(async () => {
@@ -46,101 +53,12 @@ function App() {
     cargarProductos();
   }, [cargarProductos]);
 
-  // Función para agregar un producto al carrito respetando el límite de stock
-  const agregarAlCarrito = (producto, cantidad = 1) => {
-    const id = producto?.id !== undefined ? producto.id : producto?._id;
-    if (id === undefined) return false;
-
-    const nombre = producto.name || producto.nombre || "esta pieza";
-    const stock = Number(producto.stock !== undefined ? producto.stock : 5);
-
-    // 1. Validar que el producto tenga stock disponible (> 0)
-    if (stock <= 0) {
-      alert(`Lo sentimos, "${nombre}" no tiene stock disponible en este momento.`);
-      return false;
+  // Sincronizar y validar stock del carrito al cargar o actualizarse el catálogo de productos
+  useEffect(() => {
+    if (productos && productos.length > 0) {
+      sincronizarConInventario(productos);
     }
-
-    const cantidadNumerica = Math.max(1, Number(cantidad) || 1);
-
-    // 2. Verificar cuánto ya existe en el carrito
-    const itemExistente = carrito.find(
-      (item) => Number(item.id || item._id) === Number(id)
-    );
-    const cantidadActual = itemExistente ? itemExistente.cantidad : 0;
-
-    // 3. Validar que no supere el stock total
-    if (cantidadActual >= stock) {
-      alert(
-        `No podés agregar más unidades de "${nombre}". Ya alcanzaste el stock máximo disponible (${stock} ${stock === 1 ? "unidad" : "unidades"}).`
-      );
-      return false;
-    }
-
-    if (cantidadActual + cantidadNumerica > stock) {
-      const disponibles = stock - cantidadActual;
-      alert(
-        `No es posible agregar ${cantidadNumerica} unidades de "${nombre}". Solo podés agregar hasta ${disponibles} unidad(es) más para no superar el stock disponible de ${stock}.`
-      );
-      return false;
-    }
-
-    // 4. Agregar o actualizar cantidad
-    setCarrito((prevCarrito) => {
-      const existe = prevCarrito.find(
-        (item) => Number(item.id || item._id) === Number(id)
-      );
-
-      if (existe) {
-        return prevCarrito.map((item) =>
-          String(item.id || item._id) === String(id)
-            ? { ...item, cantidad: item.cantidad + cantidadNumerica, stock }
-            : item
-        );
-      }
-
-      return [
-        ...prevCarrito,
-        {
-          ...producto,
-          id,
-          cantidad: cantidadNumerica,
-          stock,
-        },
-      ];
-    });
-
-    return true;
-  };
-
-  // Función para modificar la cantidad directamente desde el modal del carrito
-  const cambiarCantidadCarrito = (id, nuevaCantidad) => {
-    setCarrito((prevCarrito) =>
-      prevCarrito.map((item) => {
-        if (Number(item.id || item._id) === Number(id)) {
-          const stock = Number(item.stock !== undefined ? item.stock : 5);
-          // La cantidad no puede ser menor a 1 ni superar el stock disponible
-          const cantidadClampeada = Math.max(1, Math.min(Number(nuevaCantidad) || 1, stock));
-          return { ...item, cantidad: cantidadClampeada };
-        }
-        return item;
-      })
-    );
-  };
-
-  // Función para eliminar un producto del carrito por su ID
-  const eliminarDelCarrito = (id) => {
-    setCarrito((prevCarrito) =>
-      prevCarrito.filter((item) => Number(item.id || item._id) !== Number(id))
-    );
-  };
-
-  // Función para vaciar completamente el carrito
-  const vaciarCarrito = () => {
-    setCarrito([]);
-  };
-
-  // Contador de productos en carrito
-  const cantidadTotal = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+  }, [productos, sincronizarConInventario]);
 
   return (
     <>
@@ -197,7 +115,7 @@ function App() {
 
         {/* Rutas de la aplicación */}
         <Routes>
-          {/* Rutas Públicas (Integrante 3) */}
+          {/* Rutas Públicas */}
           <Route
             path="/"
             element={<Inicio productos={productos} onAgregar={agregarAlCarrito} />}
@@ -212,12 +130,15 @@ function App() {
             element={<ProductoDetalle productos={productos} onAgregar={agregarAlCarrito} />}
           />
 
-          {/* Rutas del Panel de Administración (Integrante 4) */}
+          {/* Rutas de carrito y pedidos */}
+          <Route path="/carrito" element={<CarritoPage />} />
+          <Route path="/mis-pedidos" element={<MisPedidos />} />
+
+          {/* Rutas del Panel de Administración */}
           <Route
             path="/admin/*"
             element={<AdminRoutes onProductoModificado={cargarProductos} />}
           />
-
           <Route
             path="/admin"
             element={<AdminProductos onProductoModificado={cargarProductos} />}
@@ -237,15 +158,9 @@ function App() {
         </Routes>
       </main>
 
-      {/* Vista modal del carrito */}
+      {/* Modal del carrito */}
       {mostrarCarrito && (
-        <Carrito
-          carrito={carrito}
-          onEliminar={eliminarDelCarrito}
-          onVaciar={vaciarCarrito}
-          onCerrar={() => setMostrarCarrito(false)}
-          onCambiarCantidad={cambiarCantidadCarrito}
-        />
+        <Carrito onCerrar={() => setMostrarCarrito(false)} />
       )}
 
       <Footer />
