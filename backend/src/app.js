@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const productRoutes = require("./routes/productRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 
@@ -56,6 +57,12 @@ app.use("/api/products", productRoutes);
 app.use("/api/productos", productRoutes);
 app.use("/products", productRoutes);
 app.use("/productos", productRoutes);
+
+// Rutas de pedidos y órdenes
+app.use("/api/orders", orderRoutes);
+app.use("/api/pedidos", orderRoutes);
+app.use("/orders", orderRoutes);
+app.use("/pedidos", orderRoutes);
 
 // Endpoint raíz y de verificación de salud (necesario para Render health checks)
 app.get("/", (req, res) => {
