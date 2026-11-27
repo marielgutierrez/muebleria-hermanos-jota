@@ -28,6 +28,9 @@ function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
                 <NavLink to="/contacto">Contacto</NavLink>
               </li>
               <li>
+                <NavLink to="/mis-pedidos">Mis pedidos</NavLink>
+              </li>
+              <li>
                 <NavLink to="/admin" className="nav-admin-link">Admin</NavLink>
               </li>
             </ul>
