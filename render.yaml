@@ -14,4 +14,7 @@ services:
         value: https://hermanos-jota-store.netlify.app
       - key: MONGODB_URI
         sync: false
-
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d

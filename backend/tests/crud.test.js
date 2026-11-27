@@ -35,6 +35,7 @@ describe("Pruebas de Integración CRUD - API Hermanos Jota", () => {
 
   after(async () => {
     if (server) {
+      if (server.closeAllConnections) server.closeAllConnections();
       await new Promise((resolve) => server.close(resolve));
     }
     // Limpieza posterior
