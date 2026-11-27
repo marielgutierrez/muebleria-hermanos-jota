@@ -5,7 +5,7 @@ E-commerce desarrollado como proyecto grupal, enfocado en construir una experien
 ## 📅 Información del proyecto
 
 * **Equipo:** Grupo E
-* **Entrega:** Sprint 5 y Sprint 6
+* **Entrega:** Sprint 7 y Sprint 8
 * **Tipo de proyecto:** E-commerce
 
 ## 👥 Integrantes
