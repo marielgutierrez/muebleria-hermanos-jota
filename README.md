@@ -12,7 +12,6 @@ E-commerce desarrollado como proyecto grupal, enfocado en construir una experien
 
 * Juan Ignacio Sotomayor
 * Mariel Gutiérrez
-* Marcos Gabriel Sánchez Matus
 * Araceli Virginia Mendoza 
 * Florencia Mainoli
 
@@ -25,7 +24,7 @@ Aplicación web full stack para la Mueblería Hermanos Jota. Una API en **Expres
 | Recurso | Enlace |
 | --- | --- |
 | Frontend (Netlify) | [https://hermanos-jota-store.netlify.app/](https://hermanos-jota-store.netlify.app/) |
-| Backend (Render) | `https://<tu-backend-en-render>.onrender.com` |
+| Backend (Render) | [https://muebleria-hermanos-jota-8oe4.onrender.com/](https://muebleria-hermanos-jota-8oe4.onrender.com/) |
 | Repositorio | [https://github.com/marielgutierrez/muebleria-hermanos-jota](https://github.com/marielgutierrez/muebleria-hermanos-jota) |
  
 > El backend en Render (plan gratuito) puede tardar unos 40 segundos en responder la primera vez mientras se reactiva (*cold start*).

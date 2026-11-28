@@ -59,10 +59,10 @@ app.use("/api/productos", productRoutes);
 app.use("/products", productRoutes);
 app.use("/productos", productRoutes);
 
-// Rutas de autenticación (Sprint 7 y 8 - Integrante 1 y 2)
+// Rutas de autenticación (Sprint 7 y 8 — Integrante 1)
 app.use("/api/auth", authRoutes);
 
-// Rutas de pedidos protegidas con JWT (Sprint 7 y 8 - Integrante 2)
+// Rutas de pedidos protegidas con JWT (Sprint 7 y 8 — Integrante 2)
 app.use("/api/orders", orderRoutes);
 app.use("/api/pedidos", orderRoutes);
 

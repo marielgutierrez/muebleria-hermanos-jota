@@ -1,23 +1,25 @@
 const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+let bcrypt;
+try {
+  bcrypt = require("bcrypt");
+} catch {
+  bcrypt = require("bcryptjs");
+}
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "El nombre de usuario es obligatorio"],
+      required: [true, "El nombre es obligatorio"],
       trim: true,
     },
     email: {
       type: String,
-      required: [true, "El correo electrónico es obligatorio"],
+      required: [true, "El email es obligatorio"],
       unique: true,
-      trim: true,
       lowercase: true,
-      match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        "Por favor ingresá un correo electrónico válido",
-      ],
+      trim: true,
+      match: [/^\S+@\S+\.\S+$/, "Por favor ingrese un formato de email válido"],
     },
     password: {
       type: String,
@@ -29,17 +31,25 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
     toJSON: {
       transform: (doc, ret) => {
+        if (!ret.id && ret._id) {
+          ret.id = ret._id.toString();
+        }
         delete ret.password;
         delete ret.__v;
         return ret;
       },
     },
+    toObject: { virtuals: true },
   }
 );
 
-// Hash de la contraseña antes de guardarla (en Mongoose 8+, hooks async no requieren next)
+// Hash de la contraseña antes de guardarla si no está ya hasheada (Mongoose 8+)
 userSchema.pre("save", async function () {
   if (!this.isModified("password")) {
+    return;
+  }
+  // Evitar doble hasheo si ya fue hasheada manualmente en el controlador
+  if (this.password && this.password.startsWith("$2") && this.password.length === 60) {
     return;
   }
   const salt = await bcrypt.genSalt(10);

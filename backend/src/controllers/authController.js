@@ -1,8 +1,15 @@
-const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const jwt = require("jsonwebtoken");
+
+let bcrypt;
+try {
+  bcrypt = require("bcrypt");
+} catch {
+  bcrypt = require("bcryptjs");
+}
 
 const JWT_SECRET = process.env.JWT_SECRET || "hermanos_jota_jwt_secret_key_2026";
-const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "7d";
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || "24h";
 
 // Generar token JWT con la identidad del usuario
 const generateToken = (user) => {
@@ -17,18 +24,15 @@ const generateToken = (user) => {
   );
 };
 
-/**
- * POST /api/auth/register
- * Registra un nuevo usuario
- */
-const register = async (req, res, next) => {
+// POST /api/auth/register
+const register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    // 1. Validar campos obligatorios
+    // 1. Validar datos obligatorios
     if (!name || !email || !password) {
       return res.status(400).json({
-        message: "Por favor completá todos los campos obligatorios (nombre, email y contraseña)",
+        message: "Todos los campos son obligatorios",
         error: "Campos incompletos",
       });
     }
@@ -44,95 +48,105 @@ const register = async (req, res, next) => {
     const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
     if (existingUser) {
       return res.status(400).json({
-        message: "El correo electrónico ya se encuentra registrado",
+        message: "El email ya está registrado",
         error: "Email duplicado",
       });
     }
 
-    // 3. Crear usuario (la contraseña se hashea con el hook pre-save de User)
-    const user = await User.create({
+    // 3. Hashear la contraseña con bcrypt
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
+    // 4. Guardar el usuario en MongoDB
+    const newUser = new User({
       name: name.trim(),
       email: email.toLowerCase().trim(),
-      password,
+      password: hashedPassword,
     });
+    await newUser.save();
 
-    const token = generateToken(user);
+    const token = generateToken(newUser);
 
-    // 4. Respuesta de éxito respetando el contrato acordado sin exponer la contraseña
+    // 5. Devolver respuesta compatible con Contrato A y B sin exponer contraseña
     return res.status(201).json({
-      message: "Usuario registrado con éxito",
+      message: "Usuario registrado exitosamente",
       token,
       user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
+        id: newUser._id,
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
       },
     });
   } catch (error) {
     if (error.name === "ValidationError") {
       return res.status(400).json({ message: error.message, error: error.message });
     }
-    return next(error);
+    return res.status(500).json({
+      message: "Error en el servidor al registrar usuario",
+      error: error.message,
+    });
   }
 };
 
-/**
- * POST /api/auth/login
- * Iniciar sesión y obtener token JWT
- */
-const login = async (req, res, next) => {
+// POST /api/auth/login
+const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // 1. Validar datos obligatorios
     if (!email || !password) {
       return res.status(400).json({
-        message: "Por favor ingresá email y contraseña",
+        message: "Email y contraseña obligatorios",
         error: "Credenciales incompletas",
       });
     }
 
-    // Buscar al usuario por email
+    // 2. Buscar al usuario
     const user = await User.findOne({ email: email.toLowerCase().trim() });
     if (!user) {
       return res.status(401).json({
-        message: "Credenciales inválidas: correo electrónico o contraseña incorrectos",
+        message: "Credenciales inválidas",
         error: "Usuario no encontrado",
       });
     }
 
-    // Comparar contraseña con el hash
-    const isMatch = await user.comparePassword(password);
+    // 3. Comparar contraseña ingresada con el hash guardado
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(401).json({
-        message: "Credenciales inválidas: correo electrónico o contraseña incorrectos",
+        message: "Credenciales inválidas",
         error: "Contraseña incorrecta",
       });
     }
 
+    // 4. Generar JWT
     const token = generateToken(user);
 
-    // Respuesta según contrato de integración B (pág. 13)
+    // 5. Devolver token e información pública del usuario (Contrato B pág. 13)
     return res.status(200).json({
       message: "Login exitoso",
       token,
       user: {
+        id: user._id,
         _id: user._id,
         name: user.name,
         email: user.email,
       },
     });
   } catch (error) {
-    return next(error);
+    return res.status(500).json({
+      message: "Error en el servidor al iniciar sesión",
+      error: error.message,
+    });
   }
 };
 
-/**
- * GET /api/auth/me
- * Obtener datos del usuario actualmente autenticado
- */
+// GET /api/auth/me
 const getMe = async (req, res) => {
   return res.status(200).json({
     user: {
+      id: req.user._id,
       _id: req.user._id,
       name: req.user.name,
       email: req.user.email,
