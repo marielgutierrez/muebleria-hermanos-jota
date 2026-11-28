@@ -2019,3 +2019,138 @@ h1, h2, h3 {
   font-size: 0.75rem;
   color: var(--color-text-light);
 }
+
+/* ============================================================
+   AUTENTICACIÓN: LOGIN Y REGISTRO
+   ============================================================ */
+
+.login-container,
+.registro-container {
+  max-width: 480px;
+  margin: var(--spacing-xl) auto;
+  padding: var(--spacing-xl);
+  background-color: var(--color-alabastro);
+  border: 1px solid rgba(160, 82, 45, 0.12);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(160, 82, 45, 0.10);
+}
+
+.login-container h1,
+.registro-container h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  margin-bottom: var(--spacing-lg);
+}
+
+.login-container form,
+.registro-container form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.login-container form > div,
+.registro-container form > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.login-container label,
+.registro-container label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+
+.login-container input,
+.registro-container input {
+  width: 100%;
+  padding: 0.8rem 0.9rem;
+  font-family: var(--font-primary);
+  font-size: 0.9rem;
+  color: var(--color-text);
+  background-color: var(--color-white);
+  border: 1px solid rgba(160, 82, 45, 0.2);
+  border-radius: var(--radius);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.login-container input:focus,
+.registro-container input:focus {
+  outline: none;
+  border-color: var(--color-siena);
+  box-shadow: 0 0 0 3px rgba(160, 82, 45, 0.12);
+}
+
+.login-container input::placeholder,
+.registro-container input::placeholder {
+  color: var(--color-text-light);
+  opacity: 0.7;
+}
+
+.login-container button,
+.registro-container button {
+  width: 100%;
+  padding: 0.9rem 1.2rem;
+  margin-top: var(--spacing-sm);
+  background-color: var(--color-siena);
+  color: var(--color-white);
+  border: 2px solid transparent;
+  border-radius: var(--radius);
+  font-family: var(--font-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.login-container button:hover:not(:disabled),
+.registro-container button:hover:not(:disabled) {
+  background-color: var(--color-siena-dark);
+}
+
+.login-container button:disabled,
+.registro-container button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.login-container form > p[role="alert"],
+.registro-container form > p[role="alert"] {
+  margin: 0;
+  padding: 0.7rem;
+  background-color: #fdedec;
+  border-left: 4px solid #e74c3c;
+  color: #c0392b;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+.registro-container form > p[role="status"] {
+  margin: 0;
+  padding: 0.7rem;
+  background-color: #eafaf1;
+  border-left: 4px solid #27ae60;
+  color: #1e8449;
+  font-size: 0.85rem;
+  border-radius: 4px;
+}
+
+/* Adaptación a celulares */
+@media (max-width: 540px) {
+  .login-container,
+  .registro-container {
+    margin: var(--spacing-lg) 16px;
+    padding: var(--spacing-lg) var(--spacing-md);
+  }
+
+  .login-container h1,
+  .registro-container h1 {
+    font-size: 1.5rem;
+  }
+}

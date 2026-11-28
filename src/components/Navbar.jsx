@@ -1,6 +1,16 @@
-import { NavLink } from "react-router-dom";
+
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/useAuth";
 
 function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
+  const { isAuthenticated, user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/");
+  };
+
   return (
     <header className="site-header">
       <div className="container header__inner">
@@ -27,9 +37,44 @@ function Navbar({ cantidadCarrito = 0, onAbrirCarrito }) {
               <li>
                 <NavLink to="/contacto">Contacto</NavLink>
               </li>
+             {isAuthenticated && user?.role === "admin" && (
               <li>
-                <NavLink to="/admin" className="nav-admin-link">Admin</NavLink>
-              </li>
+                <NavLink to="/admin" className="nav-admin-link">
+                 Admin
+                 </NavLink>
+                 </li>
+                )}
+                {!isAuthenticated ? (
+                <>
+                  <li>
+                    <NavLink to="/login">Iniciar sesión</NavLink>
+                  </li>
+                  <li>
+                    <NavLink to="/registro">Registrarse</NavLink>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li>
+                    <NavLink to="/perfil">
+                      Mi perfil
+                    </NavLink>
+                  </li>
+                  <li>
+                    <li>
+                      <NavLink to="/mis-pedidos">
+                       Mis pedidos
+                       </NavLink>
+                       </li>
+                    <span>Hola, {user?.name}</span>
+                  </li>
+                  <li>
+                    <button type="button" onClick={handleLogout}>
+                      Cerrar sesión
+                    </button>
+                  </li>
+                </>
+              )}
             </ul>
           </nav>
 

@@ -8,13 +8,17 @@ import Inicio from "./pages/Inicio";
 import Productos from "./pages/Productos";
 import Contacto from "./pages/Contacto";
 import ProductoDetalle from "./pages/ProductoDetalle";
+import Login from "./pages/Login";
+import Registro from "./pages/Registro";
+import ProtectedRoute from "./components/ProtectedRoute";
+
+import AdminRoutes from "./routes/AdminRoutes";
+import Perfil from "./pages/Perfil";
+// No lo agregue todavía porque el archivo aún no existe en mi local
+// import MisPedidos from "./pages/MisPedidos";
 
 // Componentes y Rutas del Panel de Administración (Integrante 4)
-import AdminRoutes, {
-  AdminProductos,
-  AdminCrearProducto,
-  AdminEditarProducto,
-} from "./routes/AdminRoutes";
+import AdminRoute from "./components/AdminRoute";
 import { getProductos } from "./services/productService";
 
 function App() {
@@ -211,29 +215,21 @@ function App() {
             path="/productos/:id"
             element={<ProductoDetalle productos={productos} onAgregar={agregarAlCarrito} />}
           />
-
+          <Route path="/login" element={<Login />} />
+          <Route path="/registro" element={<Registro />} />
+          {/* Rutas protegidas */}
+          <Route element={<ProtectedRoute />}>
+           <Route path="/perfil" element={<Perfil />} />
+           {/*<Route path="/mis-pedidos" element={<MisPedidos />} />*/}
+           </Route>
           {/* Rutas del Panel de Administración (Integrante 4) */}
-          <Route
-            path="/admin/*"
-            element={<AdminRoutes onProductoModificado={cargarProductos} />}
-          />
-
-          <Route
-            path="/admin"
-            element={<AdminProductos onProductoModificado={cargarProductos} />}
-          />
-          <Route
-            path="/admin/productos"
-            element={<AdminProductos onProductoModificado={cargarProductos} />}
-          />
-          <Route
-            path="/admin/crear-producto"
-            element={<AdminCrearProducto onProductoCreado={cargarProductos} />}
-          />
-          <Route
-            path="/admin/editar-producto/:id"
-            element={<AdminEditarProducto onProductoActualizado={cargarProductos} />}
-          />
+          <Route element={<AdminRoute />}>
+  <Route
+    path="/admin/*"
+    element={<AdminRoutes onProductoModificado={cargarProductos} />}
+  />
+</Route>
+          
         </Routes>
       </main>
 
